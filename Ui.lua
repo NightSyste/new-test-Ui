@@ -19,8 +19,8 @@ local Library = {
             Divider = Color3.fromRGB(40, 40, 45),
             Text = Color3.fromRGB(240, 240, 245),
             TextDark = Color3.fromRGB(160, 160, 165),
-            MainTransparency = 0.08,
-            SecondTransparency = 0.18,
+            MainTransparency = 0,
+            SecondTransparency = 0,
             FrameTransparency = 0
         },
         Black = {
@@ -30,8 +30,8 @@ local Library = {
             Divider = Color3.fromRGB(28, 28, 32),
             Text = Color3.fromRGB(240, 240, 245),
             TextDark = Color3.fromRGB(140, 140, 145),
-            MainTransparency = 0.08,
-            SecondTransparency = 0.18,
+            MainTransparency = 0,
+            SecondTransparency = 0,
             FrameTransparency = 0
         },
         White = {
@@ -41,8 +41,8 @@ local Library = {
             Divider = Color3.fromRGB(195, 195, 200),
             Text = Color3.fromRGB(20, 20, 25),
             TextDark = Color3.fromRGB(80, 80, 85),
-            MainTransparency = 0.08,
-            SecondTransparency = 0.18,
+            MainTransparency = 0,
+            SecondTransparency = 0,
             FrameTransparency = 0
         },
         Gray = {
@@ -52,8 +52,8 @@ local Library = {
             Divider = Color3.fromRGB(85, 85, 90),
             Text = Color3.fromRGB(235, 235, 240),
             TextDark = Color3.fromRGB(170, 170, 175),
-            MainTransparency = 0.08,
-            SecondTransparency = 0.18,
+            MainTransparency = 0,
+            SecondTransparency = 0,
             FrameTransparency = 0
         },
         Blue = {
@@ -63,8 +63,8 @@ local Library = {
             Divider = Color3.fromRGB(25, 50, 95),
             Text = Color3.fromRGB(200, 220, 255),
             TextDark = Color3.fromRGB(110, 150, 210),
-            MainTransparency = 0.08,
-            SecondTransparency = 0.18,
+            MainTransparency = 0,
+            SecondTransparency = 0,
             FrameTransparency = 0
         },
         Purple = {
@@ -74,8 +74,8 @@ local Library = {
             Divider = Color3.fromRGB(60, 25, 100),
             Text = Color3.fromRGB(220, 200, 255),
             TextDark = Color3.fromRGB(155, 120, 210),
-            MainTransparency = 0.08,
-            SecondTransparency = 0.18,
+            MainTransparency = 0,
+            SecondTransparency = 0,
             FrameTransparency = 0
         },
         Red = {
@@ -85,8 +85,8 @@ local Library = {
             Divider = Color3.fromRGB(85, 20, 20),
             Text = Color3.fromRGB(255, 210, 210),
             TextDark = Color3.fromRGB(200, 120, 120),
-            MainTransparency = 0.08,
-            SecondTransparency = 0.18,
+            MainTransparency = 0,
+            SecondTransparency = 0,
             FrameTransparency = 0
         },
     },
@@ -95,7 +95,7 @@ local Library = {
     FontObjects = {},
     UserConfig = {},
     ConfigFile = nil,
-    BackgroundTransparency = 0.08,
+    BackgroundTransparency = 0,
     -- Neue globale Akzentfarbe für Toggles & Slider
     ControlAccent = Color3.fromRGB(150, 150, 165),
     AccentElements = {}  -- Liste aller abhängigen Elemente (Toggle/Slider)
@@ -123,7 +123,7 @@ local function GenerateThemeFromAccent(AccentColor)
         Text               = IsLight and Color3.fromRGB(20, 20, 25) or Color3.fromRGB(240, 240, 245),
         TextDark           = IsLight and Color3.fromRGB(80, 80, 85) or Color3.fromRGB(165, 165, 172),
         MainTransparency   = 0,
-        SecondTransparency = 0.18,
+        SecondTransparency = 0,
         FrameTransparency  = 0
     }
 end
@@ -366,7 +366,7 @@ CreateElement("Corner", function(Scale, Offset)
 end)
 
 CreateElement("Stroke", function(Color, Thickness)
-    return Create("UIStroke", {Color = Color or Color3.fromRGB(255,255,255), Thickness = Thickness or 1, Transparency = 0.45})
+    return Create("UIStroke", {Color = Color or Color3.fromRGB(255,255,255), Thickness = Thickness or 0.5})
 end)
 
 CreateElement("List", function(Scale, Offset)
@@ -507,7 +507,7 @@ function Library:MakeNotification(NotificationConfig)
             Parent = NotificationParent,
             Size = UDim2.new(1, 0, 0, 0),
             Position = UDim2.new(1, 0, 0, 0),
-            BackgroundTransparency = 0.282,
+            BackgroundTransparency = 0.15,
             AutomaticSize = Enum.AutomaticSize.Y
         }), {
             MakeElement("Stroke", Color3.fromRGB(93,93,93), 1.2),
@@ -570,7 +570,7 @@ local function AddDescriptionIcon(ContentLabel, Description, HoverSource)
     local Tooltip = SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(25,25,25), 0, 12), {
         Size = UDim2.new(0, 200, 0, 0),
         AutomaticSize = Enum.AutomaticSize.Y,
-        BackgroundTransparency = 0.282,
+        BackgroundTransparency = 0.15,
         Visible = false,
         ZIndex = 100,
         Parent = Container
@@ -601,7 +601,7 @@ local function AddDescriptionIcon(ContentLabel, Description, HoverSource)
         Tooltip.AnchorPoint = Vector2.new(0, 1)
         Tooltip.Size = UDim2.new(0, 200, 0, Tooltip.Text.TextBounds.Y + 12)
         TweenService:Create(Tooltip, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            BackgroundTransparency = 0.282,
+            BackgroundTransparency = 0.15,
             Size = UDim2.new(0, 200, 0, Tooltip.Text.TextBounds.Y + 12)
         }):Play()
     end
@@ -750,9 +750,9 @@ function Library:MakeWindow(WindowConfig)
     local TabBarContainer = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 0), {
         Size = UDim2.new(1, 0, 0, TabBarHeight),
         Position = UDim2.new(0, 0, 0, 50),
-        BackgroundTransparency = 0.282
+        BackgroundTransparency = 0.15
     }), {
-        AddThemeObject(SetProps(MakeElement("Frame"), {Size = UDim2.new(1,0,0,1), Position = UDim2.new(0,0,1,-1), BackgroundTransparency = 0.35}), "Stroke"),
+        AddThemeObject(SetProps(MakeElement("Frame"), {Size = UDim2.new(1,0,0,1), Position = UDim2.new(0,0,1,-1)}), "Stroke"),
         TabHolder,
     }), "Second")
 
@@ -760,7 +760,7 @@ function Library:MakeWindow(WindowConfig)
         AnchorPoint = Vector2.new(0,0.5),
         Size = UDim2.new(0,32,0,32),
         Position = UDim2.new(0,12,0.5,0),
-        BackgroundTransparency = 0.28
+        BackgroundTransparency = 0.2
     }), {
         SetProps(MakeElement("Image", "https://www.roblox.com/headshot-thumbnail/image?userId="..(LocalPlayer and LocalPlayer.UserId or 0).."&width=420&height=420&format=png"), {Size = UDim2.new(1,0,1,0)}),
         AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://4031889928"), {Size = UDim2.new(1,0,1,0)}), "Second"),
@@ -794,7 +794,7 @@ function Library:MakeWindow(WindowConfig)
     local TopBarButtonContainer = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 7), {
         Size = UDim2.new(0, 105, 0, 30),
         Position = UDim2.new(1, -120, 0, 10),
-        BackgroundTransparency = 0.282
+        BackgroundTransparency = 0.15
     }), {
         AddThemeObject(MakeElement("Stroke"), "Stroke"),
         TopBarDivider1,
@@ -804,7 +804,7 @@ function Library:MakeWindow(WindowConfig)
         CloseBtn
     }), "Second")
 
-    local MainWindow = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 14), {
+    local MainWindow = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 10), {
         Parent = Container,
         Position = UDim2.new(0.5, -307, 0.5, -172),
         Size = UDim2.new(0, 615, 0, 344),
@@ -821,20 +821,6 @@ function Library:MakeWindow(WindowConfig)
         }),
         DragPoint,
         TabBarContainer,
-        Create("UIGradient", {
-            Rotation = 35,
-            Color = ColorSequence.new{
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(255,255,255)),
-                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210,215,225)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(255,255,255))
-            },
-            Transparency = NumberSequence.new{
-                NumberSequenceKeypoint.new(0, 0.92),
-                NumberSequenceKeypoint.new(0.5, 0.97),
-                NumberSequenceKeypoint.new(1, 0.92)
-            }
-        }),
-        AddThemeObject(SetProps(MakeElement("Stroke"), {Thickness = 1.2, Transparency = 0.38}), "Stroke"),
     }), "Main")
 
     local NormalSize = MainWindow.Size
@@ -844,7 +830,7 @@ function Library:MakeWindow(WindowConfig)
         Parent = Container,
         Size = UDim2.new(0,40,0,40),
         Position = UDim2.new(0.5,-20,0,20),
-        BackgroundTransparency = 0.28,
+        BackgroundTransparency = 0.2,
         BackgroundColor3 = Library.Themes[Library.SelectedTheme].Main,
         Visible = false
     }), {
@@ -1146,10 +1132,10 @@ function Library:MakeWindow(WindowConfig)
             local ElementFunction = {}
 
             function ElementFunction:AddLabel(Text)
-                local LabelFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 8), {
+                local LabelFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 5), {
                     Size = UDim2.new(1,-16,0,30),
                     Position = UDim2.new(0,8,0,0),
-                    BackgroundTransparency = 0.28,
+                    BackgroundTransparency = 0.2,
                     Parent = ItemParent
                 }), {
                     AddThemeObject(SetProps(MakeElement("Label", Text, 15), {
@@ -1173,7 +1159,7 @@ function Library:MakeWindow(WindowConfig)
                 local ParagraphFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(150, 150, 165), 0, 5), {
                     Size = UDim2.new(1,-16,0,30),
                     Position = UDim2.new(0,8,0,0),
-                    BackgroundTransparency = 0.28,
+                    BackgroundTransparency = 0.2,
                     Parent = ItemParent
                 }), {
                     AddThemeObject(SetProps(MakeElement("Label", Text, 15), {
@@ -1209,10 +1195,10 @@ function Library:MakeWindow(WindowConfig)
                 ButtonConfig.Description = ButtonConfig.Description or nil
                 local Button = {}
                 local Click = SetProps(MakeElement("Button"), {Size = UDim2.new(1,0,1,0)})
-                local ButtonFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 8), {
+                local ButtonFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 5), {
                     Size = UDim2.new(1,0,0,33),
                     Parent = ItemParent,
-                    BackgroundTransparency = 0.28
+                    BackgroundTransparency = 0.2
                 }), {
                     AddThemeObject(SetProps(MakeElement("Label", ButtonConfig.Name, 15), {
                         Size = UDim2.new(1,-12,1,0),
@@ -1244,7 +1230,7 @@ function Library:MakeWindow(WindowConfig)
                 ToggleConfig = ToggleConfig or {}
                 ToggleConfig.Name        = ToggleConfig.Name        or "Toggle"
                 ToggleConfig.Default     = ToggleConfig.Default     or false
-                ToggleConfig.Callback    = ToggleConfig.Callback    or function() end
+                ToggleConfig.Callback    = type(ToggleConfig.Callback) == "function" and ToggleConfig.Callback or function() end
                 -- Wenn keine eigene Farbe übergeben, verwende die globale ControlAccent
                 ToggleConfig.Color       = ToggleConfig.Color       or Library.ControlAccent
                 ToggleConfig.Flag        = ToggleConfig.Flag        or nil
@@ -1257,7 +1243,7 @@ function Library:MakeWindow(WindowConfig)
                     Size = UDim2.new(0,24,0,24),
                     Position = UDim2.new(1,-24,0.5,0),
                     AnchorPoint = Vector2.new(0.5,0.5),
-                    BackgroundTransparency = 0.28
+                    BackgroundTransparency = 0.2
                 }), {
                     SetProps(MakeElement("Stroke"), {Color = ToggleConfig.Color, Name = "Stroke", Transparency = 0.7, Thickness = 1}),
                     SetProps(MakeElement("Image", "rbxassetid://3944680095"), {
@@ -1268,10 +1254,10 @@ function Library:MakeWindow(WindowConfig)
                         Name = "Ico"
                     }),
                 })
-                local ToggleFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 8), {
+                local ToggleFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 5), {
                     Size = UDim2.new(1,0,0,38),
                     Parent = ItemParent,
-                    BackgroundTransparency = 0.28
+                    BackgroundTransparency = 0.2
                 }), {
                     AddThemeObject(SetProps(MakeElement("Label", ToggleConfig.Name, 15), {
                         Size = UDim2.new(1,-12,1,0),
@@ -1304,7 +1290,7 @@ function Library:MakeWindow(WindowConfig)
                         TweenService:Create(toggleStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Color = Toggle.Value and color or Library.Themes.Default.Stroke}):Play()
                     end
                     TweenService:Create(ToggleBox.Ico,    TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {ImageTransparency = Toggle.Value and 0 or 1, Size = Toggle.Value and UDim2.new(0,20,0,20) or UDim2.new(0,8,0,8)}):Play()
-                    ToggleConfig.Callback(Toggle.Value)
+                    pcall(ToggleConfig.Callback, Toggle.Value)
                     if Toggle.Save and Library.ConfigFile then
                         Library.UserConfig[ToggleConfig.Flag or ToggleConfig.Name] = Value
                         Library:SaveConfig()
@@ -1383,7 +1369,7 @@ function Library:MakeWindow(WindowConfig)
                 local SliderFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 4), {
                     Size = UDim2.new(1,0,0,65),
                     Parent = ItemParent,
-                    BackgroundTransparency = 0.28
+                    BackgroundTransparency = 0.2
                 }), {
                     AddThemeObject(SetProps(MakeElement("Label", SliderConfig.Name, 15), {
                         Size = UDim2.new(1,-12,0,14),
@@ -1475,11 +1461,11 @@ function Library:MakeWindow(WindowConfig)
                 }), "Divider")
 
                 local Click = SetProps(MakeElement("Button"), {Size = UDim2.new(1,0,1,0)})
-                local DropdownFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 8), {
+                local DropdownFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 5), {
                     Size = UDim2.new(1,0,0,38),
                     Parent = ItemParent,
                     ClipsDescendants = true,
-                    BackgroundTransparency = 0.28
+                    BackgroundTransparency = 0.2
                 }), {
                     DropdownContainer,
                     SetProps(SetChildren(MakeElement("TFrame"), {
@@ -1503,7 +1489,7 @@ function Library:MakeWindow(WindowConfig)
                         local OptionBtn = AddThemeObject(SetChildren(SetProps(MakeElement("Button"), {
                             Parent = DropdownContainer,
                             Size = UDim2.new(1,0,0,28),
-                            BackgroundTransparency = 0.28,
+                            BackgroundTransparency = 0.2,
                             ClipsDescendants = true
                         }), {
                             MakeElement("Corner", 0, 6),
@@ -1532,7 +1518,7 @@ function Library:MakeWindow(WindowConfig)
                         Dropdown.Value = "..."
                         DropdownFrame.F.Selected.Text = Dropdown.Value
                         for _, v in pairs(Dropdown.Buttons) do
-                            TweenService:Create(v,       TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.28}):Play()
+                            TweenService:Create(v,       TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.2}):Play()
                             TweenService:Create(v.Title, TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency       = 0.4}):Play()
                         end
                         return
@@ -1540,7 +1526,7 @@ function Library:MakeWindow(WindowConfig)
                     Dropdown.Value = Value
                     DropdownFrame.F.Selected.Text = Dropdown.Value
                     for _, v in pairs(Dropdown.Buttons) do
-                        TweenService:Create(v,       TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.28}):Play()
+                        TweenService:Create(v,       TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.2}):Play()
                         TweenService:Create(v.Title, TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency       = 0.4}):Play()
                     end
                     TweenService:Create(Dropdown.Buttons[Value],       TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
@@ -1592,7 +1578,7 @@ function Library:MakeWindow(WindowConfig)
 
                 local BindBox = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 4), {
                     Size = UDim2.new(0,24,0,24),
-                    BackgroundTransparency = 0.28,
+                    BackgroundTransparency = 0.2,
                     LayoutOrder = 2
                 }), {
                     AddThemeObject(MakeElement("Stroke"), "Stroke"),
@@ -1629,10 +1615,10 @@ function Library:MakeWindow(WindowConfig)
                     BindBox
                 })
 
-                local BindFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 8), {
+                local BindFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 5), {
                     Size = UDim2.new(1,0,0,38),
                     Parent = ItemParent,
-                    BackgroundTransparency = 0.28
+                    BackgroundTransparency = 0.2
                 }), {
                     AddThemeObject(SetProps(MakeElement("Label", BindConfig.Name, 15), {
                         Size = UDim2.new(1,-12,1,0),
@@ -1773,16 +1759,16 @@ function Library:MakeWindow(WindowConfig)
                     Size = UDim2.new(0,24,0,24),
                     Position = UDim2.new(1,-12,0.5,0),
                     AnchorPoint = Vector2.new(1,0.5),
-                    BackgroundTransparency = 0.28
+                    BackgroundTransparency = 0.2
                 }), {
                     AddThemeObject(MakeElement("Stroke"), "Stroke"),
                     TextboxActual
                 }), "Main")
 
-                local TextboxFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 8), {
+                local TextboxFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 5), {
                     Size = UDim2.new(1,0,0,38),
                     Parent = ItemParent,
-                    BackgroundTransparency = 0.28
+                    BackgroundTransparency = 0.2
                 }), {
                     AddThemeObject(SetProps(MakeElement("Label", TextboxConfig.Name, 15), {
                         Size = UDim2.new(1,-12,1,0),
@@ -1868,7 +1854,7 @@ function Library:MakeWindow(WindowConfig)
                     Create("UICorner", {CornerRadius = UDim.new(0,5)}),
                     ColorSelection
                 })
-                local Hue = Create("Frame", {Size = UDim2.new(0,20,1,0), Position = UDim2.new(1,-20,0,0), Visible = false, BackgroundTransparency = 0.28}, {
+                local Hue = Create("Frame", {Size = UDim2.new(0,20,1,0), Position = UDim2.new(1,-20,0,0), Visible = false, BackgroundTransparency = 0.2}, {
                     Create("UIGradient", {Rotation = 270, Color = ColorSequence.new{
                         ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255,0,4)),
                         ColorSequenceKeypoint.new(0.20, Color3.fromRGB(234,255,0)),
@@ -1896,13 +1882,13 @@ function Library:MakeWindow(WindowConfig)
                     Size = UDim2.new(0,24,0,24),
                     Position = UDim2.new(1,-12,0.5,0),
                     AnchorPoint = Vector2.new(1,0.5),
-                    BackgroundTransparency = 0.28
+                    BackgroundTransparency = 0.2
                 }), {AddThemeObject(MakeElement("Stroke"), "Stroke")}), "Main")
 
-                local ColorpickerFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 8), {
+                local ColorpickerFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 5), {
                     Size = UDim2.new(1,0,0,38),
                     Parent = ItemParent,
-                    BackgroundTransparency = 0.28
+                    BackgroundTransparency = 0.2
                 }), {
                     SetProps(SetChildren(MakeElement("TFrame"), {
                         AddThemeObject(SetProps(MakeElement("Label", ColorpickerConfig.Name, 15), {Size=UDim2.new(1,-12,1,0), Position=UDim2.new(0,12,0,0), Font=Enum.Font.FredokaOne, Name="Content"}), "Text"),
