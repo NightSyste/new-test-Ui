@@ -1,15 +1,13 @@
--- NightUI Modul
+-- NightUI – Exakt wie auf dem Bild, Bedienung wie Orion Lib
 local NightUI = {}
 NightUI.__index = NightUI
 
--- Hilfsfunktion für UI‑Elemente
-local function createUI(parent, className, properties)
-    local obj = Instance.new(className)
-    for prop, val in pairs(properties) do
-        obj[prop] = val
-    end
-    obj.Parent = parent
-    return obj
+-- Hilfsfunktion für UI-Erstellung
+local function create(obj, parent, props)
+    local inst = Instance.new(obj)
+    for k, v in pairs(props) do inst[k] = v end
+    inst.Parent = parent
+    return inst
 end
 
 function NightUI.new()
@@ -17,26 +15,26 @@ function NightUI.new()
     self.tabs = {}
     self.activeTab = nil
 
-    -- ScreenGui
-    local screenGui = Instance.new("ScreenGui")
-    screenGui.Name = "NightUI"
-    screenGui.ResetOnSpawn = false
-    screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    local playerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    local screenGui = create("ScreenGui", playerGui, {
+        Name = "NightUI",
+        ResetOnSpawn = false,
+    })
 
-    -- Hauptframe
-    local mainFrame = createUI(screenGui, "Frame", {
-        Size = UDim2.new(0, 500, 0, 400),
-        Position = UDim2.new(0.5, -250, 0.5, -200),
+    -- Hauptframe (dunkelgrau, abgerundet)
+    local main = create("Frame", screenGui, {
+        Size = UDim2.new(0, 520, 0, 420),
+        Position = UDim2.new(0.5, -260, 0.5, -210),
         BackgroundColor3 = Color3.fromRGB(30, 30, 30),
         BorderSizePixel = 0,
         ClipsDescendants = true,
     })
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, 8)
-    corner.Parent = mainFrame
+    corner.Parent = main
 
-    -- Titel
-    local title = createUI(mainFrame, "TextLabel", {
+    -- Titel "Night System" + Version
+    create("TextLabel", main, {
         Size = UDim2.new(0, 200, 0, 30),
         Position = UDim2.new(0, 15, 0, 10),
         BackgroundTransparency = 1,
@@ -46,9 +44,9 @@ function NightUI.new()
         Font = Enum.Font.GothamBold,
         TextXAlignment = Enum.TextXAlignment.Left,
     })
-    local version = createUI(mainFrame, "TextLabel", {
-        Size = UDim2.new(0, 100, 0, 20),
-        Position = UDim2.new(0, 15, 0, 40),
+    create("TextLabel", main, {
+        Size = UDim2.new(0, 80, 0, 20),
+        Position = UDim2.new(0, 15, 0, 38),
         BackgroundTransparency = 1,
         Text = "v1.0.0",
         TextColor3 = Color3.fromRGB(150, 150, 150),
@@ -57,8 +55,8 @@ function NightUI.new()
         TextXAlignment = Enum.TextXAlignment.Left,
     })
 
-    -- Tab‑Leiste
-    local tabBar = createUI(mainFrame, "Frame", {
+    -- Tab-Leiste (dunkler)
+    local tabBar = create("Frame", main, {
         Size = UDim2.new(1, 0, 0, 40),
         Position = UDim2.new(0, 0, 0, 60),
         BackgroundColor3 = Color3.fromRGB(40, 40, 40),
@@ -66,35 +64,33 @@ function NightUI.new()
     })
     local tabLayout = Instance.new("UIListLayout")
     tabLayout.FillDirection = Enum.FillDirection.Horizontal
-    tabLayout.Padding = UDim.new(0, 5)
+    tabLayout.Padding = UDim.new(0, 6)
     tabLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
     tabLayout.VerticalAlignment = Enum.VerticalAlignment.Center
     tabLayout.Parent = tabBar
 
-    -- Container für die Tab‑Inhalte
-    local tabContainer = createUI(mainFrame, "Frame", {
+    -- Container für Tab-Inhalte (mit Padding)
+    local container = create("Frame", main, {
         Size = UDim2.new(1, -20, 1, -110),
         Position = UDim2.new(0, 10, 0, 105),
         BackgroundTransparency = 1,
         ClipsDescendants = true,
     })
 
-    self.mainFrame = mainFrame
+    self.main = main
     self.tabBar = tabBar
-    self.tabContainer = tabContainer
+    self.container = container
     self.screenGui = screenGui
 
     return self
 end
 
 function NightUI:MakeTab(name)
-    if self.tabs[name] then
-        return self.tabs[name].interface
-    end
+    if self.tabs[name] then return self.tabs[name].interface end
 
-    -- Tab‑Button
-    local button = createUI(self.tabBar, "TextButton", {
-        Size = UDim2.new(0, 100, 0, 30),
+    -- Tab-Button
+    local btn = create("TextButton", self.tabBar, {
+        Size = UDim2.new(0, 110, 0, 30),
         BackgroundColor3 = Color3.fromRGB(50, 50, 50),
         Text = name,
         TextColor3 = Color3.fromRGB(200, 200, 200),
@@ -105,12 +101,11 @@ function NightUI:MakeTab(name)
     })
     local cornerBtn = Instance.new("UICorner")
     cornerBtn.CornerRadius = UDim.new(0, 4)
-    cornerBtn.Parent = button
+    cornerBtn.Parent = btn
 
-    -- Tab‑Frame (Inhaltsbereich)
-    local frame = createUI(self.tabContainer, "Frame", {
+    -- Tab-Frame (Inhalt)
+    local frame = create("Frame", self.container, {
         Size = UDim2.new(1, 0, 1, 0),
-        Position = UDim2.new(0, 0, 0, 0),
         BackgroundTransparency = 1,
         Visible = false,
     })
@@ -121,38 +116,38 @@ function NightUI:MakeTab(name)
     layout.VerticalAlignment = Enum.VerticalAlignment.Top
     layout.Parent = frame
 
-    -- Tab‑Interface (Methoden)
     local tabInterface = {}
 
+    -- Toggle (Schalter)
     function tabInterface:AddToggle(labelText, callback)
-        local toggleFrame = createUI(frame, "Frame", {
+        local line = create("Frame", frame, {
             Size = UDim2.new(1, -10, 0, 30),
             BackgroundTransparency = 1,
         })
-        local label = createUI(toggleFrame, "TextLabel", {
+        local lbl = create("TextLabel", line, {
             Size = UDim2.new(0.7, 0, 1, 0),
             BackgroundTransparency = 1,
             Text = labelText,
             TextColor3 = Color3.fromRGB(255, 255, 255),
-            TextSize = 16,
+            TextSize = 15,
             Font = Enum.Font.Gotham,
             TextXAlignment = Enum.TextXAlignment.Left,
         })
         -- Switch
-        local switchFrame = createUI(toggleFrame, "Frame", {
-            Size = UDim2.new(0, 50, 0, 25),
-            Position = UDim2.new(1, -55, 0.5, -12.5),
+        local sw = create("Frame", line, {
+            Size = UDim2.new(0, 50, 0, 26),
+            Position = UDim2.new(1, -55, 0.5, -13),
             BackgroundColor3 = Color3.fromRGB(80, 80, 80),
             BorderSizePixel = 0,
         })
-        local cornerSwitch = Instance.new("UICorner")
-        cornerSwitch.CornerRadius = UDim.new(1, 0)
-        cornerSwitch.Parent = switchFrame
+        local cornerSw = Instance.new("UICorner")
+        cornerSw.CornerRadius = UDim.new(1, 0)
+        cornerSw.Parent = sw
 
-        local knob = createUI(switchFrame, "Frame", {
+        local knob = create("Frame", sw, {
             Size = UDim2.new(0, 20, 0, 20),
-            Position = UDim2.new(0, 2, 0.5, -10),
-            BackgroundColor3 = Color3.fromRGB(200, 200, 200),
+            Position = UDim2.new(0, 3, 0.5, -10),
+            BackgroundColor3 = Color3.fromRGB(220, 220, 220),
             BorderSizePixel = 0,
         })
         local cornerKnob = Instance.new("UICorner")
@@ -160,61 +155,61 @@ function NightUI:MakeTab(name)
         cornerKnob.Parent = knob
 
         local state = false
-        local toggleButton = Instance.new("ImageButton")
-        toggleButton.Size = UDim2.new(1, 0, 1, 0)
-        toggleButton.BackgroundTransparency = 1
-        toggleButton.Parent = switchFrame
-        toggleButton.AutoButtonColor = false
+        local button = Instance.new("ImageButton")
+        button.Size = UDim2.new(1, 0, 1, 0)
+        button.BackgroundTransparency = 1
+        button.Parent = sw
+        button.AutoButtonColor = false
 
-        local function updateSwitch()
+        local function update()
             if state then
-                switchFrame.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
-                knob.Position = UDim2.new(1, -22, 0.5, -10)
+                sw.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+                knob.Position = UDim2.new(1, -23, 0.5, -10)
             else
-                switchFrame.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-                knob.Position = UDim2.new(0, 2, 0.5, -10)
+                sw.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+                knob.Position = UDim2.new(0, 3, 0.5, -10)
             end
         end
-        updateSwitch()
+        update()
 
-        toggleButton.MouseButton1Click:Connect(function()
+        button.MouseButton1Click:Connect(function()
             state = not state
-            updateSwitch()
+            update()
             if callback then callback(state) end
         end)
-
-        return toggleFrame
+        return line
     end
 
+    -- Slider (mit Wertanzeige)
     function tabInterface:AddSlider(labelText, min, max, callback)
-        local sliderFrame = createUI(frame, "Frame", {
-            Size = UDim2.new(1, -10, 0, 40),
+        local line = create("Frame", frame, {
+            Size = UDim2.new(1, -10, 0, 44),
             BackgroundTransparency = 1,
         })
-        local label = createUI(sliderFrame, "TextLabel", {
-            Size = UDim2.new(0.5, 0, 0.5, 0),
+        local lbl = create("TextLabel", line, {
+            Size = UDim2.new(0.5, 0, 0.4, 0),
             Position = UDim2.new(0, 0, 0, 0),
             BackgroundTransparency = 1,
             Text = labelText,
             TextColor3 = Color3.fromRGB(255, 255, 255),
-            TextSize = 16,
+            TextSize = 15,
             Font = Enum.Font.Gotham,
             TextXAlignment = Enum.TextXAlignment.Left,
         })
-        local valueLabel = createUI(sliderFrame, "TextLabel", {
-            Size = UDim2.new(0.3, 0, 0.5, 0),
+        local valLbl = create("TextLabel", line, {
+            Size = UDim2.new(0.3, 0, 0.4, 0),
             Position = UDim2.new(0.7, 0, 0, 0),
             BackgroundTransparency = 1,
             Text = tostring(min),
             TextColor3 = Color3.fromRGB(200, 200, 200),
-            TextSize = 16,
+            TextSize = 15,
             Font = Enum.Font.Gotham,
             TextXAlignment = Enum.TextXAlignment.Right,
         })
 
-        local track = createUI(sliderFrame, "Frame", {
-            Size = UDim2.new(0.7, 0, 0.3, 0),
-            Position = UDim2.new(0, 0, 0.6, 0),
+        local track = create("Frame", line, {
+            Size = UDim2.new(0.7, 0, 0.25, 0),
+            Position = UDim2.new(0, 0, 0.55, 0),
             BackgroundColor3 = Color3.fromRGB(60, 60, 60),
             BorderSizePixel = 0,
         })
@@ -222,7 +217,7 @@ function NightUI:MakeTab(name)
         cornerTrack.CornerRadius = UDim.new(1, 0)
         cornerTrack.Parent = track
 
-        local fill = createUI(track, "Frame", {
+        local fill = create("Frame", track, {
             Size = UDim2.new(0, 0, 1, 0),
             BackgroundColor3 = Color3.fromRGB(0, 150, 255),
             BorderSizePixel = 0,
@@ -231,10 +226,10 @@ function NightUI:MakeTab(name)
         cornerFill.CornerRadius = UDim.new(1, 0)
         cornerFill.Parent = fill
 
-        local knob = createUI(track, "TextButton", {
+        local knob = create("TextButton", track, {
             Size = UDim2.new(0, 16, 1.5, 0),
             Position = UDim2.new(0, -8, -0.25, 0),
-            BackgroundColor3 = Color3.fromRGB(200, 200, 200),
+            BackgroundColor3 = Color3.fromRGB(220, 220, 220),
             Text = "",
             BorderSizePixel = 0,
             AutoButtonColor = false,
@@ -247,87 +242,82 @@ function NightUI:MakeTab(name)
         local function updateSlider(input)
             local pos = input.Position.X.Offset
             local width = track.AbsoluteSize.X
+            if width <= 0 then return end
             local percent = math.clamp(pos / width, 0, 1)
             local value = min + (max - min) * percent
             value = math.floor(value + 0.5)
             fill.Size = UDim2.new(percent, 0, 1, 0)
             knob.Position = UDim2.new(percent, -8, -0.25, 0)
-            valueLabel.Text = tostring(value)
+            valLbl.Text = tostring(value)
             if callback then callback(value) end
         end
 
-        knob.MouseButton1Down:Connect(function()
-            dragging = true
-        end)
-        knob.MouseButton1Up:Connect(function()
-            dragging = false
-        end)
+        knob.MouseButton1Down:Connect(function() dragging = true end)
+        knob.MouseButton1Up:Connect(function() dragging = false end)
         knob.MouseMoved:Connect(function()
             if dragging then
                 local mouse = game.Players.LocalPlayer:GetMouse()
                 local trackPos = track.AbsolutePosition
-                local relativeX = mouse.X - trackPos.X
-                updateSlider({Position = UDim2.new(0, relativeX, 0, 0)})
+                local relX = mouse.X - trackPos.X
+                updateSlider({Position = UDim2.new(0, relX, 0, 0)})
             end
         end)
         track.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 then
                 local mouse = game.Players.LocalPlayer:GetMouse()
                 local trackPos = track.AbsolutePosition
-                local relativeX = mouse.X - trackPos.X
-                updateSlider({Position = UDim2.new(0, relativeX, 0, 0)})
+                local relX = mouse.X - trackPos.X
+                updateSlider({Position = UDim2.new(0, relX, 0, 0)})
             end
         end)
 
-        -- Initial auf Minimum setzen
+        -- Initial setzen (min)
         updateSlider({Position = UDim2.new(0, 0, 0, 0)})
+        return line
     end
 
+    -- Button
     function tabInterface:AddButton(labelText, callback)
-        local button = createUI(frame, "TextButton", {
-            Size = UDim2.new(0.8, 0, 0, 30),
+        local btn = create("TextButton", frame, {
+            Size = UDim2.new(0.85, 0, 0, 32),
             BackgroundColor3 = Color3.fromRGB(60, 60, 60),
             Text = labelText,
             TextColor3 = Color3.fromRGB(255, 255, 255),
             TextSize = 16,
             Font = Enum.Font.Gotham,
             BorderSizePixel = 0,
+            AutoButtonColor = false,
         })
         local corner = Instance.new("UICorner")
         corner.CornerRadius = UDim.new(0, 4)
-        corner.Parent = button
-        button.MouseButton1Click:Connect(function()
+        corner.Parent = btn
+        btn.MouseButton1Click:Connect(function()
             if callback then callback() end
         end)
-        return button
+        return btn
     end
 
-    function tabInterface:AddLabel(labelText)
-        local label = createUI(frame, "TextLabel", {
+    -- Label (nur Text)
+    function tabInterface:AddLabel(text, color)
+        local lbl = create("TextLabel", frame, {
             Size = UDim2.new(1, -10, 0, 20),
             BackgroundTransparency = 1,
-            Text = labelText,
-            TextColor3 = Color3.fromRGB(200, 200, 200),
+            Text = text,
+            TextColor3 = color or Color3.fromRGB(200, 200, 200),
             TextSize = 14,
             Font = Enum.Font.Gotham,
             TextXAlignment = Enum.TextXAlignment.Left,
         })
-        return label
+        return lbl
     end
 
     -- Tab speichern
-    self.tabs[name] = {
-        button = button,
-        frame = frame,
-        interface = tabInterface,
-    }
+    self.tabs[name] = { button = btn, frame = frame, interface = tabInterface }
 
-    -- Ersten Tab automatisch aktivieren
-    if not self.activeTab then
-        self:SelectTab(name)
-    end
+    -- Ersten Tab aktivieren
+    if not self.activeTab then self:SelectTab(name) end
 
-    button.MouseButton1Click:Connect(function()
+    btn.MouseButton1Click:Connect(function()
         self:SelectTab(name)
     end)
 
